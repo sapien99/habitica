@@ -258,7 +258,7 @@
             >
               {{ $t('challenges') }}
             </router-link>
-            <div class="topbar-dropdown">
+            <!--<div class="topbar-dropdown">
               <router-link
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'myChallenges'}"
@@ -271,9 +271,9 @@
               >
                 {{ $t('findChallenges') }}
               </router-link>
-            </div>
+            </div>-->
           </li>
-          <li
+          <!--<li
             class="topbar-item droppable"
             :class="{
               'active': $route.path.startsWith('/help')}"
@@ -308,7 +308,7 @@
                 {{ $t('overview') }}
               </router-link>
             </div>
-          </li>
+          </li>-->
           <li
             v-if="hasElevatedPrivileges"
             class="topbar-item droppable"
@@ -347,21 +347,21 @@
               >
                 {{ $t("adminPanel") }}
               </router-link>
-              <router-link
+              <!--<router-link
                 v-if="hasPermission(user, 'accessControl')"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'blockers'}"
               >
                 {{ $t("siteBlockers") }}
-              </router-link>
-              <a
+              </router-link>-->
+              <!--<a
                 v-if="hasPermission(user, 'news')"
                 class="topbar-dropdown-item dropdown-item"
                 target="_blank"
                 href="https://panel.habitica.com"
               >
                 {{ $t('newsroom') }}
-              </a>
+              </a>-->
             </div>
           </li>
         </b-navbar-nav>

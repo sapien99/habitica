@@ -85,7 +85,7 @@
     "giftedSubscriptionInfo": "<%= name %> hat Dir ein <%= months %>-monatiges Abonnement geschenkt",
     "giftedSubscriptionFull": "Hallo <%= username %>, <%= sender %> hat Dir <%= monthCount %> Monate Abonnement geschickt!",
     "invitedParty": "Du wurdest in eine Party eingeladen",
-    "invitedGuild": "Du wurdest in eine Gruppe eingeladen",
+    "invitedGuild": "Du wurdest in eine Gilde eingeladen",
     "importantAnnouncements": "Erinnerungen zur Anmeldung, um Aufgaben zu komplettieren und Preise zu erhalten",
     "weeklyRecaps": "Zusammenfassung Deiner Account-Aktivitäten in dieser Woche (Notiz: Ist zurzeit wegen Performance-Problemen deaktiviert. Wir hoffen, dass es bald wieder zurück ist und werden demnächst wieder E-Mails verschicken!)",
     "onboarding": "Hilfe, um Dein Habitica-Konto einzurichten",

@@ -56,12 +56,12 @@
       >
         {{ $t('settings') }}
       </router-link>
-      <router-link
+      <!--<router-link
         class="topbar-dropdown-item dropdown-item dropdown-separated"
         :to="{name: 'subscription'}"
       >
         {{ $t('subscription') }}
-      </router-link>
+      </router-link>-->
       <a
         class="topbar-dropdown-item nav-link dropdown-item dropdown-separated"
         @click.prevent="logout()"
