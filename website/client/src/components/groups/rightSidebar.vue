@@ -1,6 +1,7 @@
 <template>
   <div class="sidebar px-4">
-    <div>
+    <!-- mf: einladungs buttons etc -->
+    <div v-if="1==2">
       <div class="buttons-wrapper">
         <div class="button-container d-flex">
           <button
@@ -117,24 +118,32 @@
       </div>
     </div>
     <div>
+      <!-- mf: quest information -->
       <quest-sidebar-section
         v-if="isParty"
         :group="group"
       />
+      
+      <!-- mf: guild information -->
       <sidebar-section
         v-if="!isParty"
         :title="$t('guildSummary')"
       >
         <p v-markdown="group.summary"></p>
       </sidebar-section>
-      <sidebar-section :title="$t('groupDescription')">
+      
+      <!-- mf: we dont need a group description -->
+      <!--<sidebar-section :title="$t('groupDescription')">
         <p v-markdown="group.description"></p>
-      </sidebar-section>
-      <sidebar-section
+      </sidebar-section>-->
+      
+      <!-- mf: no additional challenges for now -->
+      <!--<sidebar-section
         :title="$t('challenges')"
       >
         <group-challenges :group="group" />
-      </sidebar-section>
+      </sidebar-section>-->
+
     </div>
   </div>
 </template>

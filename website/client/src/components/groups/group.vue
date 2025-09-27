@@ -5,20 +5,22 @@
   >
     <group-form-modal v-if="isParty" />
     <quest-detail-modal :group="group" />
-    <participant-list-modal :group="group" />
-    <invitation-list-modal :group="group" />
+    <participant-list-modal :group="group" /> <!-- mf: restyle -->
+    <invitation-list-modal :group="group" /> <!-- mf: restyle -->
     <group-gems-modal />
     <div class="col-12 col-sm-8 standard-page">
       <div class="row">
         <div class="col-12 col-md-6 title-details">
-          <h1>{{ group.name }}</h1>
+          <h1 class="group-header">{{ group.name }}</h1>
           <div>
             <span class="mr-1 ml-0">
-              <strong v-once>{{ $t('groupLeader') }}:</strong>
-              <user-link
-                class="mx-1"
-                :user="group.leader"
-              />
+              <i>
+                <strong v-once>{{ $t('groupLeader') }}:</strong>
+                <user-link
+                  class="mx-1"
+                  :user="group.leader"
+                />
+              </i>
             </span>
           </div>
         </div>
@@ -32,12 +34,12 @@
               @click="showMemberModal()"
             >
               <div
-                v-if="group.memberCount > 1000"
+                v-if="group.memberCount > 10"
                 class="svg-icon shield"
                 v-html="icons.goldGuildBadgeIcon"
               ></div>
               <div
-                v-if="group.memberCount > 100 && group.memberCount < 999"
+                v-if="group.memberCount > 5 && group.memberCount < 6"
                 class="svg-icon shield"
                 v-html="icons.silverGuildBadgeIcon"
               ></div>
@@ -52,6 +54,7 @@
                 class="member-list label"
               >
                 {{ $t('memberList') }}
+                <!-- mf: show health/status bars, name and class of all members? -->                
               </div>
             </div>
             <div v-if="!isParty">
@@ -78,7 +81,7 @@
           </div>
         </div>
       </div>
-      <chat
+      <!--<chat
         :label="$t('chat')"
         :group="group"
         :placeholder="!isParty ? $t('chatPlaceholder') : $t('partyChatPlaceholder')"
@@ -94,7 +97,7 @@
             </div>
           </div>
         </template>
-      </chat>
+      </chat>-->
     </div>
     <right-sidebar
       :is-admin="isAdmin"
@@ -125,6 +128,10 @@
 
   h1 {
     color: $purple-200;
+  }
+
+  .group-header {
+    margin-bottom: 0px;
   }
 
   .item-with-icon {

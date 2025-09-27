@@ -54,7 +54,7 @@
         v-else
         class="no-party d-none d-md-flex justify-content-center text-center mr-4"
       >
-        <div class="align-self-center">
+        <!--<div class="align-self-center">
           <h3>{{ user.party._id ? $t('questWithOthers') : $t('battleWithFriends') }}</h3>
           <span
             class="small-text"
@@ -67,7 +67,8 @@
           >
             {{ user.party._id ? $t('findPartyMembers') : $t('getStarted') }}
           </button>
-        </div>
+        </div>--> 
+        <!-- mf: remove advertising -->
       </div>
     </div>
   </div>

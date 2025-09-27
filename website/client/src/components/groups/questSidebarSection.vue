@@ -1,5 +1,6 @@
 <template>
   <sidebar-section :title="$t('questDetails')">
+    <!-- mf: if not on quest -->
     <div
       v-if="!onPendingQuest && !onActiveQuest"
       class="row no-quest-section"
@@ -13,7 +14,7 @@
         <h4 v-once>
           {{ $t('yourPartyIsNotOnQuest') }}
         </h4>
-        <p v-once>
+        <p v-once>          
           {{ $t('questDescription') }}
         </p>
         <button
@@ -25,6 +26,7 @@
         </button>
       </div>
     </div>
+    
     <div
       v-if="user.party.quest && user.party.quest.RSVPNeeded"
       class="quest-active-section quest-invite"
@@ -45,17 +47,21 @@
         </button>
       </div>
     </div>
+
     <div
       v-if="!onPendingQuest && onActiveQuest"
       class="row quest-active-section"
       :class="{'not-participating': !userIsOnQuest}"
     >
       <div class="col-12 text-center">
-        <Sprite
+        <div class="row">
+          <Enemy v-for="enemy in enemies" :unit="enemy" :user="user" :click="testClick"/>          
+        </div>        
+        <!--<Sprite
           class="quest-boss"
           :image-name="'quest_' + questData.key"
-        />
-        <div class="quest-box">
+        />-->
+        <!--<div class="quest-box">
           <div
             v-if="questData.collect"
             class="collect-info"
@@ -141,16 +147,16 @@
                   }}
                   <strong>HP</strong>
 
-                  <!-- current boss hp uses ceil so
-                    you don't underestimate damage needed to end quest-->
+                  <!- current boss hp uses ceil so
+                    you don't underestimate damage needed to end quest->
                 </span>
               </div>
               <div
                 v-if="userIsOnQuest && user.party.quest.progress.up"
                 class="col-6"
               >
-                <!-- @TODO: Why do we not sync quest
-                  progress on the group doc? Each user could have different progress.-->
+                <!- @TODO: Why do we not sync quest
+                  progress on the group doc? Each user could have different progress.->
                 <span class="float-right pending-value">
                   <div
                     v-once
@@ -164,8 +170,8 @@
                   }}
                   {{ $t('pendingDamageLabel') }}
                 </span>
-                <!-- player's pending damage uses floor so you
-                  don't overestimate damage you've already done-->
+                <!- player's pending damage uses floor so you
+                  don't overestimate damage you've already done->
               </div>
             </div>
             <div
@@ -208,7 +214,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
     <div
@@ -644,6 +650,7 @@ import percent from '@/../../common/script/libs/percent';
 import { mapState } from '@/libs/store';
 import sidebarSection from '../sidebarSection';
 import Sprite from '../ui/sprite';
+import Enemy from './Enemy.vue';
 
 import questIcon from '@/assets/svg/quest.svg?raw';
 import swordIcon from '@/assets/svg/sword.svg?raw';
@@ -655,11 +662,50 @@ export default {
   components: {
     sidebarSection,
     Sprite,
+    Enemy,
   },
   mixins: [questActionsMixin],
   props: ['group'],
   data () {
+    // temp, take from quest
+    let enemies = [
+      {
+        image: 'quest_dustbunnies',
+        name: 'Dustbunnies',
+        hp: 29,
+        maxHp: 30,
+        pendingDmg: 5,
+        mp: 0,        
+        maxMp: 0,
+        size: '6',
+        targeted: false
+      },
+      {
+        image: 'quest_dustbunnies',
+        name: 'Minor Dustbunnies',
+        hp: 10,
+        maxHp: 10,
+        pendingDmg: 0,
+        mp: 0,
+        maxMp: 0,
+        size: '3',
+        targeted: true
+      },
+      {
+        image: 'quest_dustbunnies',
+        name: 'Minor Dustbunnies',
+        hp: 10,
+        maxHp: 10,
+        pendingDmg: 0,
+        mp: 0,
+        maxMp: 0,
+        size: '3',
+        targeted: false
+      },      
+    ]
+
     return {
+      enemies,
       icons: Object.freeze({
         questIcon,
         healthNoPaddingIcon,
@@ -771,6 +817,9 @@ export default {
     startQuest () {
       this.questActionsConfirmQuest();
     },
+    testClick(unit) {
+      console.log(`clicked on unit ${unit.name}`)
+    }
   },
 };
 </script>
