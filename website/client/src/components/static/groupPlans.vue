@@ -25,7 +25,7 @@
             {{ $t('groupPlanTitle') }}
           </h1>
           <p class="mb-0">
-            {{ $t('groupPlanDesc') }}
+            <label v-html="$t('groupPlanDesc')"></label>            
           </p>
           <div class="text-center">
             <button
@@ -59,7 +59,7 @@
             <p>{{ $t('groupManagementControlsDesc') }}</p>
           </div>
         </div>
-        <div class="text-center mb-128">
+        <!--<div class="text-center mb-128">
           <div class="bot-left"></div>
           <div class="col-6 offset-3">
             <h2
@@ -84,7 +84,7 @@
             </div>
           </div>
           <div class="bot-right"></div>
-        </div>
+        </div>-->
         <b-modal
           id="group-plan"
           title
@@ -99,7 +99,7 @@
         </b-modal>
       </div>
     </div>
-    <div
+    <!--<div
       class="bottom-banner text-center"
       :class="{ static: isStaticPage }"
     >
@@ -110,7 +110,7 @@
         class="purple-600"
         v-html="$t('checkGroupPlanFAQ')"
       ></p>
-    </div>
+    </div>-->
   </div>
 </template>
 

@@ -18,16 +18,16 @@
         >
           {{ $t('cancel') }}
         </span>
-        <button
+        <!--<button
           class="btn btn-primary next-button"
           :value="$t('create')"
           :disabled="!newGroupIsReady"
           @click="createGroup(newGroup)"
         >
           {{ $t('create') }}
-        </button>
+        </button>-->
       </div>
-      <h2>{{ $t('createGroup') }}</h2>
+      <h2 style="width: 100%">{{ $t('createGroup') }}</h2>
 
       <!-- FORM -->
       <div class="form-group">
@@ -102,8 +102,7 @@
 
   .cancel-text {
     color: $blue-10;
-    font-size: 0.875rem;
-    margin-right: 16px;
+    font-size: 0.875rem;    
     text-align: center;
     cursor: pointer;
   }

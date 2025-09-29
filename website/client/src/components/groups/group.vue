@@ -1,4 +1,5 @@
 <template>
+  <!-- mf: guilds and parties -->
   <div
     v-if="group._id"
     class="row"
@@ -81,7 +82,7 @@
           </div>
         </div>
       </div>
-      <!--<chat
+      <chat
         :label="$t('chat')"
         :group="group"
         :placeholder="!isParty ? $t('chatPlaceholder') : $t('partyChatPlaceholder')"
@@ -97,7 +98,7 @@
             </div>
           </div>
         </template>
-      </chat>-->
+      </chat>
     </div>
     <right-sidebar
       :is-admin="isAdmin"
@@ -290,7 +291,6 @@
 </style>
 
 <script>
-// @TODO: Break this down into components
 
 import extend from 'lodash/extend';
 import groupUtilities from '@/mixins/groupsUtilities';
@@ -301,7 +301,8 @@ import participantListModal from './participantListModal';
 import groupFormModal from './groupFormModal';
 import groupGemsModal from '@/components/groups/groupGemsModal';
 import markdownDirective from '@/directives/markdown';
-import chat from './chat';
+//import chat from './chat';
+import chat from './battle-chat';
 import userLink from '../userLink';
 
 import deleteIcon from '@/assets/svg/delete.svg?raw';

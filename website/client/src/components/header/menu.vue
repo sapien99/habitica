@@ -187,14 +187,14 @@
             >
               {{ $t('party') }}
             </router-link>
-            <div class="topbar-dropdown">
+            <!--<div class="topbar-dropdown">
               <router-link
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'lookingForParty'}"
               >
                 {{ $t('lookingForPartyTitle') }}
               </router-link>
-            </div>
+            </div>-->
           </li>
           <b-nav-item
             v-if="!user.party._id"
@@ -204,7 +204,9 @@
           >
             {{ $t('party') }}
           </b-nav-item>
+          <!-- mf: show guild after lvl 5, create own guild after lvl 10 -->
           <li
+            v-if="user.stats.lvl > 10 || (groupPlans && groupPlans.length > 0)"
             class="topbar-item droppable"
             :class="{
               'active': $route.path.startsWith('/group-plans')}"
@@ -237,11 +239,13 @@
               </router-link>
             </div>
           </li>
+          <!-- mf: show challenges after lvl 5 -->
           <li
+            v-if="user.stats.lvl > 5"
             class="topbar-item droppable"
             :class="{
               'active': $route.path.startsWith('/challenges')}"
-          >
+          >            
             <div
               class="chevron rotate"
               @click="dropdownMobile($event)"

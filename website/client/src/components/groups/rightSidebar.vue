@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar px-4">
     <!-- mf: einladungs buttons etc -->
-    <div v-if="1==2">
+    <div v-if="1==1">
       <div class="buttons-wrapper">
         <div class="button-container d-flex">
           <button
@@ -137,8 +137,9 @@
         <p v-markdown="group.description"></p>
       </sidebar-section>-->
       
-      <!-- mf: no additional challenges for now -->
+      <!-- mf: no additional challenges for now, show it only in guilds -->
       <!--<sidebar-section
+        v-if="!isParty" 
         :title="$t('challenges')"
       >
         <group-challenges :group="group" />

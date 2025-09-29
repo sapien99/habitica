@@ -89,7 +89,8 @@
           :group="group"
           class="quest-detail"
         />
-        <quest-rewards
+        <!-- mf: 7+ int needed to see quest rewards (but multiplied with difficulty factor) -->
+        <quest-rewards v-if="user.stats.int > 7"
           :quest="questData"
           class="mt-4"
         />
@@ -388,10 +389,12 @@ export default {
     selectQuest (selectQuestPayload) {
       this.selectMode = false;
       this.selectedQuest = selectQuestPayload.key;
-      this.fromSelectionDialog = true;
+      this.fromSelectionDialog = true;      
     },
-    async questInit () {
+    async questInit () {      
       this.loading = true;
+
+      //mf: TODO: force screen render to show quest!!
 
       Analytics.updateUser({
         partyID: this.group._id,

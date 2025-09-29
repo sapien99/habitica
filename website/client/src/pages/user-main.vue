@@ -229,7 +229,8 @@ export default {
 
     this.$root.$on('buyModal::showItem', item => {
       this.selectedItemToBuy = item;
-      this.$root.$emit('bv::show::modal', 'buy-modal');
+      //mf: Change dialog etc willst du an gems kommen....
+      this.$root.$emit('bv::show::modal', 'buy-modal'); 
     });
 
     this.$root.$on('bv::modal::hidden', event => {

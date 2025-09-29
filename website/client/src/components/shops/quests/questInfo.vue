@@ -18,13 +18,23 @@
           </div>
         </dd>
       </div>
+      <!-- mf: 3+ int needed to see boss hp -->
       <div
-        v-if="quest.boss"
+        v-if="quest.boss && user.stats.int > 3"
         class="table-row"
       >
         <dt>{{ $t('bossHP') + ':' }}</dt>
-        <dd>{{ quest.boss.hp }}</dd>
+        <dd>{{  quest.boss.hp }}</dd>
       </div>
+      <!-- mf: 5+ int needed to see boss hp -->
+      <div
+        v-if="quest.boss && user.stats.int > 5"
+        class="table-row"
+      >
+        <dt>{{ $t('bossSkills') + ':' }}</dt>
+        <dd>{{  quest.boss.description }}</dd>
+      </div>
+      <!-- mf: show difficulty stars (which also is the multiplier for bounty) -->
       <div
         v-if="quest.purchaseType !== 'bundles'"
         class="table-row"
@@ -141,6 +151,8 @@ dt {
 <script>
 import moment from 'moment';
 
+import { mapState } from '@/libs/store';
+
 import svgStar from '@/assets/svg/difficulty-star.svg?raw';
 import svgStarHalf from '@/assets/svg/difficulty-star-half.svg?raw';
 import svgStarEmpty from '@/assets/svg/difficulty-star-empty.svg?raw';
@@ -171,6 +183,8 @@ export default {
     };
   },
   computed: {
+    ...mapState({ user: 'user.data' }),
+    //mf: difficulty also acts as a multiplier for bounry
     difficulty () {
       if (this.quest.boss) {
         return this.quest.boss.str;

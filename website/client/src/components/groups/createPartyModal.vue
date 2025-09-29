@@ -21,7 +21,7 @@
             v-once
             class="mb-4"
           >
-            {{ $t('playInPartyDescription') }}
+            <label v-html="$t('playInPartyDescription')"></label>
           </p>
           <button
             v-once
@@ -36,7 +36,7 @@
         @close="close()"
       />
     </div>
-    <div class="row grey-row">
+    <!--<div class="row grey-row">
       <div class="col-12 text-center px-0">
         <div class="join-party"></div>
         <h1
@@ -76,7 +76,7 @@
           {{ $t('lookForParty') }}
         </button>
       </div>
-    </div>
+    </div>-->
   </b-modal>
 </template>
 

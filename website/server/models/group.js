@@ -665,6 +665,32 @@ schema.methods.handleQuestInvitation = async function handleQuestInvitation (use
   return Boolean(result.modifiedCount);
 };
 
+async function writeQuestIntro() {
+  //mf: write Quest intro
+  const questInfo = shared.content.quests[this.quest.key];  
+  const newMessageInto = await this.sendChat({
+    message: translateMessage(userLang, questInfo.notes()),
+    metaData: {
+      participatingMembers: this.getParticipatingQuestMembers().join(', '),
+    }
+  });
+  return await newMessageInto.save();
+}
+
+async function writeQuestStart() {
+  const newMessage = await this.sendChat({
+    message: `\`${shared.i18n.t('chatQuestStarted', { questName: quest.text('en') }, 'en')}\``,
+    metaData: {
+      participatingMembers: this.getParticipatingQuestMembers().join(', '),
+    },
+    info: {
+      type: 'quest_start',
+      quest: quest.key,
+    },
+  });
+  return await newMessage.save();
+}
+
 schema.methods.startQuest = async function startQuest (user) {
   // not using i18n strings because these errors are meant
   // for devs who forgot to pass some parameters
@@ -769,17 +795,11 @@ schema.methods.startQuest = async function startQuest (user) {
       .commit();
   });
 
-  const newMessage = await this.sendChat({
-    message: `\`${shared.i18n.t('chatQuestStarted', { questName: quest.text('en') }, 'en')}\``,
-    metaData: {
-      participatingMembers: this.getParticipatingQuestMembers().join(', '),
-    },
-    info: {
-      type: 'quest_start',
-      quest: quest.key,
-    },
-  });
-  await newMessage.save();
+  //mf: write Quest started
+  await writeQuestStart();  
+
+  //mf: write Quest intro
+  await writeQuestIntro();
 
   const membersToEmail = [];
 

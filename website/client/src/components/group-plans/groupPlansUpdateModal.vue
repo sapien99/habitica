@@ -56,7 +56,7 @@
       </div>
       <ul
         class="mb-4 px-4"
-      >
+      ><!-- mf: TODO: rework completely! Shared tasks should do EVEN MORE damage when nobody finishes them -->
         <li>{{ $t('newGroupsBullet01') }}</li>
         <li>{{ $t('newGroupsBullet02') }}</li>
         <li>{{ $t('newGroupsBullet03') }}</li>

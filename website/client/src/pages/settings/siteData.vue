@@ -23,7 +23,7 @@
       </table>
     </div>
 
-    <div class="col-12">
+    <div v-if="hasPermission(user, 'userSupport')" class="col-12">
       <h2 v-once>
         {{ $t('api') }}
       </h2>
@@ -48,6 +48,7 @@ import UserDataRow from '@/pages/settings/siteDataRows/userDataRow.vue';
 import ApiRow from '@/pages/settings/siteDataRows/apiRow.vue';
 import WebhooksRow from '@/pages/settings/siteDataRows/webhooksRow.vue';
 import DeveloperModeRow from '@/pages/settings/siteDataRows/developerModeRow.vue';
+import { userStateMixin } from '../../mixins/userState';
 
 export default {
   components: {
@@ -57,12 +58,18 @@ export default {
     UserDataRow,
     UserIdRow,
   },
+  mixins: [userStateMixin],
   mounted () {
-    this.$store.dispatch('common:setTitle', {
+    this.$store.dispatch('common:setTitleBAsi', {
       section: this.$t('settings'),
       subSection: this.$t('siteData'),
     });
   },
+  computed: {
+    user () {
+      return this.$store.state.user?.data;
+    }
+  }
 };
 </script>
 

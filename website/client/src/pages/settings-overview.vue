@@ -193,7 +193,7 @@ export default {
       }),
       tabs: [
         'general',
-        'subscription',
+        /*'subscription',*/
         'siteData',
         'transactions',
         'notifications',

@@ -1,5 +1,5 @@
 <template>
-  <sidebar-section :title="$t('questDetails')">
+  <sidebar-section :title="onPendingQuest || onActiveQuest ? $t('battleDetails') : $t('questDetails')">
     <!-- mf: if not on quest -->
     <div
       v-if="!onPendingQuest && !onActiveQuest"
@@ -55,7 +55,7 @@
     >
       <div class="col-12 text-center">
         <div class="row">
-          <Enemy v-for="enemy in enemies" :unit="enemy" :user="user" :click="testClick"/>          
+          <Enemy v-bind:key="enemy.id" v-for="enemy in enemies" :unit="enemy" :user="user" :click="testClick"/>          
         </div>        
         <!--<Sprite
           class="quest-boss"
@@ -217,6 +217,7 @@
         </div>-->
       </div>
     </div>
+
     <div
       v-if="onPendingQuest || onActiveQuest"
       class="quest-pending-section"
@@ -237,6 +238,7 @@
         />
       </div>
     </div>
+
     <div
       v-if="onPendingQuest || onActiveQuest"
       class="quest-buttons"
@@ -245,14 +247,16 @@
         class="btn btn-secondary w-100"
         @click="openQuestDetails()"
       >
-        {{ $t('viewDetails') }}
+        {{ $t('viewQuestDetails') }}
       </button>
     </div>
+    <!-- mf: just when not on active quest -->
     <div
       v-if="userIsQuestLeader && !onActiveQuest"
       class="quest-buttons"
     >
-      <button
+
+    <button
         class="btn btn-success w-100"
         @click="startQuest()"
       >
@@ -809,6 +813,8 @@ export default {
       const quest = await this.$store.dispatch('quests:sendAction', { groupId: partyId, action: 'quests/accept' });
       this.user.party.quest = quest;
       this.group.quest = quest;
+      // mf: TODO: write quest intro to battle chat
+      console.log('QuestAccept')
     },
     async questReject (partyId) {
       const quest = await this.$store.dispatch('quests:sendAction', { groupId: partyId, action: 'quests/reject' });

@@ -168,8 +168,9 @@
             </div>
           </div>
         </div>
-        <div class="create-task-area">
+        <div class="create-task-area">          
           <div
+            v-if="hasPermission(user, 'trustedUser')"            
             id="create-task-btn"
             class="btn btn-primary create-btn d-flex align-items-center"
             :class="{open: openCreateBtn}"
@@ -405,6 +406,7 @@ import dragIcon from '@/assets/svg/drag_indicator.svg?raw';
 
 import { mapState, mapActions } from '@/libs/store';
 import brokenTaskModal from './brokenTaskModal';
+import { userStateMixin } from '../../mixins/userState';
 
 export default {
   components: {
@@ -447,10 +449,11 @@ export default {
       creatingTask: null,
     };
   },
+  mixins: [userStateMixin],
   computed: {
     ...mapState({ user: 'user.data' }),
     tagsByType () {
-      const userTags = this.user.tags;
+      const userTags = this.user.tags; //mf: TODO: reduce default!!
       const tagsByType = {
         challenges: {
           key: 'challenges',

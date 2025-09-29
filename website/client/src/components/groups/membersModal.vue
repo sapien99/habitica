@@ -60,7 +60,7 @@
               </template>
             </select-list>
           </div>
-          <div class="col-3">
+          <!--<div class="col-3">
             <select-list
               :items="sortDirections"
               :value="directionEntryBySelectedValue"
@@ -77,7 +77,7 @@
                 >{{ item.text }}</span>
               </template>
             </select-list>
-          </div>
+          </div>-->
         </div>
       </div>
       <div

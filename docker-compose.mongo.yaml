@@ -1,0 +1,26 @@
+version: "3"
+services:
+  mongo:
+    image: docker.io/mongo:latest
+    restart: unless-stopped
+    hostname: mongo
+    command: ["--replSet", "rs", "--bind_ip_all", "--port", "27017"]
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate() }" | mongosh --port 27017 --quiet
+      interval: 10s
+      timeout: 30s
+      start_period: 0s
+      start_interval: 1s
+      retries: 30
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb-data/db:/data/db:rw,Z
+      - ./mongodb-data/dbconf:/data/configdb:Z
+    networks:
+      habitica:
+        aliases:
+          - mongo
+networks:
+  habitica:
+    driver: bridge

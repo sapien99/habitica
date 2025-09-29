@@ -43,28 +43,35 @@
 
       <table class="table">
         <language-setting />
-        <date-format-setting />
-        <day-start-adjustment-setting />
+        <!--<date-format-setting />-->
+        <!--<day-start-adjustment-setting />-->
         <audio-theme-setting />
-        <sleep-mode />
+        <sleep-mode v-if="hasPermission(user, 'trustedUser')" />
         <tr>
           <td colspan="3">
           </td>
         </tr>
       </table>
 
-      <h2 v-once>
-        {{ $t('character') }}
-      </h2>
+      <div v-if="hasPermission(user, 'trustedUser')">
+        <pre>
+          {{ user }}
+        </pre>
+        <h2 v-once>
+          {{ $t('character') }}
+        </h2>
 
-      <table class="table">
-        <fix-values-setting />
-        <class-setting />
-        <tr>
-          <td colspan="3">
-          </td>
-        </tr>
-      </table>
+        <table class="table">        
+          <fix-values-setting/>          
+          <class-setting />
+          <tr>
+            <td colspan="3">
+            </td>
+          </tr>
+        </table>
+      
+      </div>
+
     </div>
   </div>
 </template>
@@ -101,6 +108,7 @@ import FixValuesSetting from '@/pages/settings/settingRows/fixValuesSetting.vue'
 import { GenericUserPreferencesMixin } from '@/pages/settings/components/genericUserPreferencesMixin';
 import { mapState } from '@/libs/store';
 import SleepMode from '@/pages/settings/settingRows/sleepMode.vue';
+import { userStateMixin } from '../../mixins/userState';
 
 export default {
   components: {
@@ -119,7 +127,7 @@ export default {
     UserEmailSetting,
     UserNameSetting,
   },
-  mixins: [notificationsMixin, GenericUserPreferencesMixin],
+  mixins: [userStateMixin, notificationsMixin, GenericUserPreferencesMixin],
   computed: {
     ...mapState({
       user: 'user.data',

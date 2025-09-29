@@ -330,72 +330,7 @@
               >{{ $t('work') }}</label>
             </div>
           </div>
-          <div class="task-option">
-            <div class="custom-control custom-checkbox">
-              <input
-                id="exercise"
-                v-model="taskCategories"
-                class="custom-control-input"
-                type="checkbox"
-                value="exercise"
-              >
-              <label
-                v-once
-                class="custom-control-label"
-                for="exercise"
-              >{{ $t('exercise') }}</label>
-            </div>
-          </div>
-          <div class="task-option">
-            <div class="custom-control custom-checkbox">
-              <input
-                id="health_wellness"
-                v-model="taskCategories"
-                class="custom-control-input"
-                type="checkbox"
-                value="health_wellness"
-              >
-              <label
-                v-once
-                class="custom-control-label"
-                for="health_wellness"
-              >{{ $t('health_wellness') }}</label>
-            </div>
-          </div>
-          <div class="task-option">
-            <div class="custom-control custom-checkbox">
-              <input
-                id="school"
-                v-model="taskCategories"
-                class="custom-control-input"
-                type="checkbox"
-                value="school"
-              >
-              <label
-                v-once
-                class="custom-control-label"
-                for="school"
-              >{{ $t('school') }}</label>
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="task-option">
-            <div class="custom-control custom-checkbox">
-              <input
-                id="chores"
-                v-model="taskCategories"
-                class="custom-control-input"
-                type="checkbox"
-                value="chores"
-              >
-              <label
-                v-once
-                class="custom-control-label"
-                for="chores"
-              >{{ $t('chores') }}</label>
-            </div>
-          </div>
+
           <div class="task-option">
             <div class="custom-control custom-checkbox">
               <input
@@ -411,23 +346,7 @@
                 for="creativity"
               >{{ $t('creativity') }}</label>
             </div>
-          </div>
-          <div class="task-option">
-            <div class="custom-control custom-checkbox">
-              <input
-                id="self_care"
-                v-model="taskCategories"
-                class="custom-control-input"
-                type="checkbox"
-                value="self_care"
-              >
-              <label
-                v-once
-                class="custom-control-label"
-                for="self_care"
-              >{{ $t('self_care') }}</label>
-            </div>
-          </div>
+          </div>          
         </div>
       </div>
     </div>

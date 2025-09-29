@@ -45,13 +45,16 @@
               :sprites-margin="'0px auto 0px -24px'"
             />
           </div>
-          <item
+          <div class="img-wrapper" v-else-if="item.key === 'gem'">            
+            <img :src="images[item.class]"/>
+          </div>
+          <!--<item
             v-else-if="item.key === 'gem'"
             class="flat bordered-item"
             :item="item"
             :item-content-class="item.class"
             :show-popover="false"
-          />
+          />-->
           <item
             v-else-if="item.key != 'gem'"
             class="flat bordered-item"
@@ -197,7 +200,7 @@
         <span v-html="$t('nextFreeRebirth', {days: nextFreeRebirth})"></span>
       </div>
     </div>
-    <div
+    <!--<div
       v-if="item.key === 'gem'"
       class="d-flex justify-content-center align-items-center"
     >
@@ -215,7 +218,7 @@
         <strong>{{ $t('monthlyGems') }} &nbsp;</strong>
         {{ gemsLeft }} / {{ totalGems }} {{ $t('gemsRemaining') }}
       </div>
-    </div>
+    </div>-->
     <div
       slot="modal-footer"
     >
@@ -235,6 +238,15 @@
 
   #buy-modal {
     @include centeredModal();
+
+    .img-wrapper {      
+      margin: 0;
+      padding: 0;     
+    }
+    .img-wrapper img {      
+      max-width: 150px;
+      max-height: 150px;
+    }
 
     .modal-body {
       padding-left: 0px;
@@ -322,7 +334,7 @@
       top: -25.67px;
       left: 1px;
 
-      &.shop_gem {
+      &.shop_gem {        
         transform: scale(1.45, 1.45);
         top: -2px;
        left: 0px;
@@ -622,6 +634,9 @@ import EquipmentAttributesGrid from '../inventory/equipment/attributesGrid.vue';
 import Item from '@/components/inventory/item';
 import Avatar from '@/components/avatar';
 
+// custom images
+import pngGemAdmin from "@/assets/images/custom/love_gem_admin.png";
+
 const dropEggs = eggs.drops;
 const dropPotions = hatchingPotions.drops;
 
@@ -674,6 +689,9 @@ export default {
   },
   data () {
     return {
+      images: {
+        "shop_gem": pngGemAdmin
+      },
       icons: Object.freeze({
         close: svgClose,
         gold: svgGold,
