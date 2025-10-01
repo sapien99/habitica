@@ -54,7 +54,9 @@
       :class="{'not-participating': !userIsOnQuest}"
     >
       <div class="col-12 text-center">
+        <!-- mf: TODO: split in battle front row / back row-->
         <div class="row">
+          <!-- mf: enemy stack, users can only attack first element, unless they are thief, mage, archer, invisible, flying etc -->
           <Enemy v-bind:key="enemy.id" v-for="enemy in enemies" :unit="enemy" :user="user" :click="testClick"/>          
         </div>        
         <!--<Sprite
@@ -281,6 +283,14 @@
 <style lang="scss" scoped>
   @import '@/assets/scss/colors.scss';
 
+  .front {
+    background-color: lightgray;
+  }
+
+  .back {
+    background-color: darkgray;
+  }
+  
   .svg-icon {
     height: 25px;
     width: 25px;

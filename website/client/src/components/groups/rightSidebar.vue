@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar px-4">
-    <!-- mf: einladungs buttons etc -->
+    <!-- mf: TODO: einladungs buttons etc, nur wenn keine quest aktiv? -->
     <div v-if="1==1">
       <div class="buttons-wrapper">
         <div class="button-container d-flex">
@@ -195,11 +195,11 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/scss/colors.scss';
 
-  @media (min-width: 1300px) {
+  /*@media (min-width: 1300px) {
     .sidebar {
       max-width: 430px !important;
     }
-  }
+  }*/
 
   .sidebar {
     background-color: $gray-600;
