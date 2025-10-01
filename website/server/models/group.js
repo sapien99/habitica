@@ -39,6 +39,14 @@ import { model as UserNotification } from './userNotification';
 import { sendChatPushNotifications } from '../libs/chat'; // eslint-disable-line import/no-cycle
 import { model as UserHistory } from './userHistory'; // eslint-disable-line import/no-cycle
 
+import { // eslint-disable-line import/no-cycle
+  BattleModel,  
+  EnemySchema,
+} from './quests/battle/battle';
+import { // eslint-disable-line import/no-cycle
+  BattleLogModel,  
+} from './quests/battle/log';
+
 const questScrolls = shared.content.quests;
 const { questSeriesAchievements } = shared.content;
 const { Schema } = mongoose;
@@ -96,6 +104,7 @@ export const schema = new Schema({
   logo: String,
   leaderMessage: String,
   quest: {
+    battle: { $type: String, ref: 'Battle' },
     key: String,
     active: { $type: Boolean, default: false },
     leader: { $type: String, ref: 'User' },
@@ -345,11 +354,30 @@ schema.statics.getGroups = async function getGroups (options = {}) {
 // Not putting into toJSON because there we can't access user
 // It also removes the _meta field that can be stored inside a chat message
 schema.statics.toJSONCleanChat = async function groupToJSONCleanChat (group, user) {
-  // @TODO: Adding this here for support the old chat,
-  // but we should depreciate accessing chat like this
+  const groupToJson = group.toJSON();
   // Also only return chat if requested, eventually we don't want to return chat here
-  if (group && group.chat) {
+  if (group && group.quest && group.quest.battle) {
+    const battle = await BattleModel.findOne({_id: group.quest.battle})
+    if (battle) {
+      groupToJson.quest.battle = battle;
+
+      if (user) {
+        let userStyles = {}
+        setUserStyles(userStyles, user);
+        console.log(userStyles)
+      }
+
+      groupToJson.quest.logs = await battle.getLog();      
+      // mf: TODO: use separate endpoint, not group endpoint. battle logs can be pretty long      
+      
+    }    
+  }
+  return groupToJson;
+  
+  // mf: kick this, we dont need a chat here
+  /*if (group && group.chat && !group.quest.battle) {
     await getGroupChat(group);
+    console.log(group.chat)
   }
 
   const groupToJson = group.toJSON();
@@ -388,9 +416,9 @@ schema.statics.toJSONCleanChat = async function groupToJSONCleanChat (group, use
       return chatMsg;
     })
     // Used to filter for undefined chat messages that should not be shown to non-admins
-    .filter(chatMsg => chatMsg !== undefined);
+    .filter(chatMsg => chatMsg !== undefined); 
 
-  return groupToJson;
+  return groupToJson;*/
 };
 
 function getInviteError (uuids, emails, usernames) {
@@ -560,7 +588,7 @@ schema.methods.sendChat = async function sendChat (options = {}) {
 
   // Activate the webhook for receiving group chat messages before
   // newChatMessage is possibly returned
-  this.sendGroupChatReceivedWebhooks(newChatMessage);
+  //this.sendGroupChatReceivedWebhooks(newChatMessage);
 
   // do not send notifications for:
   // - groups that never send notifications (e.g., Tavern)
@@ -665,32 +693,6 @@ schema.methods.handleQuestInvitation = async function handleQuestInvitation (use
   return Boolean(result.modifiedCount);
 };
 
-async function writeQuestIntro() {
-  //mf: write Quest intro
-  const questInfo = shared.content.quests[this.quest.key];  
-  const newMessageInto = await this.sendChat({
-    message: translateMessage(userLang, questInfo.notes()),
-    metaData: {
-      participatingMembers: this.getParticipatingQuestMembers().join(', '),
-    }
-  });
-  return await newMessageInto.save();
-}
-
-async function writeQuestStart() {
-  const newMessage = await this.sendChat({
-    message: `\`${shared.i18n.t('chatQuestStarted', { questName: quest.text('en') }, 'en')}\``,
-    metaData: {
-      participatingMembers: this.getParticipatingQuestMembers().join(', '),
-    },
-    info: {
-      type: 'quest_start',
-      quest: quest.key,
-    },
-  });
-  return await newMessage.save();
-}
-
 schema.methods.startQuest = async function startQuest (user) {
   // not using i18n strings because these errors are meant
   // for devs who forgot to pass some parameters
@@ -700,6 +702,8 @@ schema.methods.startQuest = async function startQuest (user) {
 
   const userIsParticipating = this.quest.members[user._id];
   const quest = questScrolls[this.quest.key];
+  
+  /* collection quest */
   let collected = {};
   if (quest.collect) {
     collected = _.transform(quest.collect, (result, n, itemToCollect) => {
@@ -707,20 +711,47 @@ schema.methods.startQuest = async function startQuest (user) {
     });
   }
 
-  this.markModified('quest');
-  this.quest.active = true;
+  /* battle quest */
+  // mf: TODO: if this is a battle quest generate a new battle  
   if (quest.boss) {
-    this.quest.progress.hp = quest.boss.hp;
-    if (quest.boss.rage) this.quest.progress.rage = 0;
+    // if we have a battle save the current status in the db
+    // mf: TODO: get this from quest and instantiate the battle
+    // mf: TODO: clear battle if something bad happens
+    const enemy = EnemySchema.createEmptyEnemy();
+    enemy.name =quest.boss.name();
+    enemy.hp = quest.boss.hp;      
+    this.quest.battle = new BattleModel({
+      groupId: this._id,
+      questId: this.quest._id,
+      enemies: [enemy]        
+    });    
+    await this.quest.battle.save();    
+    // write Quest intro
+    const userLang = user.preferences.language;
+    const questInfo = shared.content.quests[this.quest.key];
+
+    const userStyles = {}
+    // mf: TODO: somehow get that different, it will create TONS of stuff just to show the user portrait
+    if (user) {
+      setUserStyles(userStyles, user);
+    }
+
+    await this.quest.battle.writeLog(BattleLogModel.INTRO, {      
+      //text: translateMessage(userLang, questInfo.notes())
+      text: questInfo.notes()
+    });
+    await this.save() //save group to indicate we are in a battle
   } else if (quest.collect) {
     this.quest.progress.collect = collected;
   }
+
+  this.markModified('quest');
+  this.quest.active = true;
 
   const nonMembers = Object.keys(_.pickBy(this.quest.members, member => !member));
   const noResponseMembers = Object.keys(_.pickBy(this.quest.members, member => member === null));
   // Changes quest.members to only include participating members
   this.quest.members = _.pickBy(this.quest.members, _.identity);
-
   // Persist quest.members early to avoid simultaneous handling of accept/reject
   // while processing the rest of this script
   await this.updateOne({ $set: { 'quest.members': this.quest.members } }).exec();
@@ -795,14 +826,8 @@ schema.methods.startQuest = async function startQuest (user) {
       .commit();
   });
 
-  //mf: write Quest started
-  await writeQuestStart();  
-
-  //mf: write Quest intro
-  await writeQuestIntro();
-
+  /*
   const membersToEmail = [];
-
   // send notifications and webhooks in the background without blocking
   for (const member of members) {
     if (member._id === user._id) {
@@ -838,10 +863,10 @@ schema.methods.startQuest = async function startQuest (user) {
   // Send emails in bulk
   sendTxnEmail(membersToEmail, 'quest-started', [
     { name: 'PARTY_URL', content: '/party' },
-  ]);
+  ]);*/
 };
 
-schema.methods.sendGroupChatReceivedWebhooks = function sendGroupChatReceivedWebhooks (chat) {
+/*schema.methods.sendGroupChatReceivedWebhooks = function sendGroupChatReceivedWebhooks (chat) {
   const query = {
     webhooks: {
       $elemMatch: {
@@ -867,7 +892,7 @@ schema.methods.sendGroupChatReceivedWebhooks = function sendGroupChatReceivedWeb
       });
     })
     .catch(err => logger.error(err));
-};
+};*/
 
 schema.statics.cleanQuestParty = _cleanQuestParty;
 schema.statics.cleanQuestUser = _cleanQuestUser;

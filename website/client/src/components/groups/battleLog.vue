@@ -2,8 +2,8 @@
   <div class="row chat-row">      
       <slot name="additionRow"></slot>
       <div class="row">
-        <chat-messages
-          :chat.sync="group.chat"
+        <battle-log-row
+          :logs="group.quest.logs"
           :group-type="group.type"
           :group-id="group._id"
           :group-name="group.name"
@@ -16,28 +16,19 @@
 import { MAX_MESSAGE_LENGTH } from '@/../../common/script/constants';
 //import externalLinks from '../../mixins/externalLinks';
 
-import chatMessages from '../chat/chatMessages';
+import BattleLogRow from '../chat/battleLogRow';
 import { mapState } from '@/libs/store';
 
 export default {
   directives: {    
   },
   components: {    
-    chatMessages,
+    BattleLogRow,
   },
   //mixins: [externalLinks],
   props: ['label', 'group', 'placeholder'],
   data () {
-    return {
-      newMessage: '',
-      sending: false,
-      chat: {
-        submitDisable: false,
-        submitTimeout: null,
-      },
-      textbox: null,
-      MAX_MESSAGE_LENGTH: MAX_MESSAGE_LENGTH.toString(),
-    };
+    return {};
   },
   computed: {
     ...mapState({ user: 'user.data' }),
@@ -52,40 +43,7 @@ export default {
   },
   updated () {    
   },
-  methods: {
-    async sendMessageShortcut () {
-      // If the user recently pasted in the text field, don't submit
-      if (!this.chat.submitDisable) {
-        this.sendMessage();
-      }
-    },
-    async sendMessage () {
-      if (this.sending) return;
-      this.sending = true;
-      let response;
-
-      try {
-        response = await this.$store.dispatch('chat:postChat', {
-          group: this.group,
-          message: this.newMessage,
-        });
-      } catch (e) {
-        // catch exception to allow function to continue
-      }
-
-      if (response) {
-        this.group.chat.unshift(response.message);
-        this.newMessage = '';
-      }
-
-      this.sending = false;
-
-      // @TODO: I would like to not reload everytime we send. Why are we reloading?
-      // The response has all the necessary data...
-      const chat = await this.$store.dispatch('chat:getChat', { groupId: this.group._id });
-      this.group.chat = chat;
-    },
-    
+  methods: {    
     fetchRecentMessages () {
       this.$emit('fetchRecentMessages');
     },

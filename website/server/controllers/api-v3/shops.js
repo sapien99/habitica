@@ -60,6 +60,7 @@ api.getMarketGear = {
  * @apiSuccess {string} message Success message
  */
 api.getQuestShopItems = {
+  // mf: TODO: quest items here, this will be from mongo in the future
   method: 'GET',
   url: '/shops/quests',
   middlewares: [authWithHeaders()],

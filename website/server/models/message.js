@@ -60,6 +60,7 @@ export const chatModel = mongoose.model('Chat', chatSchema);
 export const inboxModel = mongoose.model('Inbox', inboxSchema);
 
 export function setUserStyles (newMessage, user) {
+  // mf: TODO: this seems to render/add the user portrait for chat etc
   const userStyles = {};
   userStyles.items = { gear: {} };
 
@@ -115,6 +116,7 @@ export function setUserStyles (newMessage, user) {
   if (newMessage.markModified) {
     newMessage.markModified('userStyles contributor');
   }
+  console.log('USERSTYLES',userStyles)
 }
 
 // Sanitize an input message, separate from messageDefaults because

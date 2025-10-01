@@ -81,11 +81,10 @@
             </div>
           </div>
         </div>
-      </div>
-      <chat
-        :label="$t('chat')"
-        :group="group"
-        :placeholder="!isParty ? $t('chatPlaceholder') : $t('partyChatPlaceholder')"
+      </div>      
+      <battle-log
+        :label="$t('battlelog')"
+        :group="group"        
         @fetchRecentMessages="fetchRecentMessages()"
       >
         <template slot="additionRow">
@@ -98,23 +97,25 @@
             </div>
           </div>
         </template>
-      </chat>
-    </div>
-    <right-sidebar
-      :is-admin="isAdmin"
-      :is-leader="isLeader"
-      :is-member="isMember"
-      :is-party="isParty"
-      :group="group"
-      :search-id="searchId"
-      class="col-12 col-sm-4"
-      @leave="clickLeave()"
-      @join="join()"
-      @messageLeader="messageLeader()"
-      @upgradeGroup="upgradeGroup"
-      @updateGuild="updateGuild"
-      @showInviteModal="showInviteModal()"
-    />
+      </battle-log>
+    </div>    
+    <div class="col-12 col-sm-5">
+        <right-sidebar
+        :is-admin="isAdmin"
+        :is-leader="isLeader"
+        :is-member="isMember"
+        :is-party="isParty"
+        :group="group"
+        :search-id="searchId"
+        class="col-12 col-sm-12"
+        @leave="clickLeave()"
+        @join="join()"
+        @messageLeader="messageLeader()"
+        @upgradeGroup="upgradeGroup"
+        @updateGuild="updateGuild"
+        @showInviteModal="showInviteModal()"
+      />
+    </div>    
   </div>
 </template>
 
@@ -302,7 +303,7 @@ import groupFormModal from './groupFormModal';
 import groupGemsModal from '@/components/groups/groupGemsModal';
 import markdownDirective from '@/directives/markdown';
 //import chat from './chat';
-import chat from './battle-chat';
+import BattleLog from './battleLog';
 import userLink from '../userLink';
 
 import deleteIcon from '@/assets/svg/delete.svg?raw';
@@ -331,7 +332,7 @@ export default {
     participantListModal,
     groupGemsModal,
     userLink,
-    chat,
+    BattleLog,
   },
   directives: {
     markdown: markdownDirective,
@@ -357,11 +358,7 @@ export default {
       }),
       members: [],
       membersLoaded: false,
-      selectedQuest: {},
-      chat: {
-        submitDisable: false,
-        submitTimeout: null,
-      },
+      selectedQuest: {}
     };
   },
   computed: {
@@ -476,6 +473,7 @@ export default {
       });
     },
     fetchRecentMessages () {
+      // mf: TODO: just fetch messages, not the complete party
       this.fetchGuild();
     },
     updateGuild () {

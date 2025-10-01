@@ -577,4 +577,55 @@ api.leaveQuest = {
   },
 };
 
+/**
+ * @api {get} /api/v3/groups/:groupId/quests/status Get Quest Status
+ * @apiName QuestStatus
+ * @apiGroup Quest
+ *
+ * @apiParam (Path) {String} groupId The group _id (or 'party')
+ *
+ * @apiSuccess {Object} data Quest Object
+ *
+ * @apiUse GroupNotFound
+ * @apiUse QuestNotFound
+ */
+api.inquireQuest = {
+  method: 'GET',
+  url: '/groups/:groupId/quests/status',
+  middlewares: [authWithHeaders()],
+  async handler (req, res) {
+    const { user } = res.locals;
+    const { groupId } = req.params;
+
+    req.checkParams('groupId', apiError('groupIdRequired')).notEmpty();
+
+    const validationErrors = req.validationErrors();
+    if (validationErrors) throw validationErrors;
+
+    const group = await Group.getGroup({ user, groupId, fields: basicGroupFields.concat(' quest') });
+
+    if (!group) throw new NotFound(res.t('groupNotFound'));
+    if (group.type !== 'party') throw new NotAuthorized(res.t('guildQuestsNotSupported'));
+    if (group.quest.leader === user._id) throw new NotAuthorized(res.t('questLeaderCannotLeaveQuest'));
+    if (!group.quest.members[user._id]) throw new NotAuthorized(res.t('notPartOfQuest'));
+
+    group.quest.members[user._id] = false;
+    group.markModified('quest.members');
+
+    user.party.quest = Group.cleanQuestUser(user.party.quest.progress);
+    user.markModified('party.quest');
+
+    const [savedGroup] = await Promise.all([
+      group.save(),
+      user.save(),
+    ]);
+
+    res.respond(200, savedGroup.quest);
+
+    await UserHistory.beginUserHistoryUpdate(user._id, req.headers)
+      .withQuestInviteResponse(group.quest.key, 'leave')
+      .commit();
+  },
+};
+
 export default api;

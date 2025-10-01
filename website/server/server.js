@@ -12,12 +12,15 @@ import attachMiddlewares from './middlewares/index';
 // Load config files
 import connectToMongoDB from './libs/mongoose';
 import './libs/setupPassport';
-import './libs/setupFirebase';
+
+//import './libs/setupFirebase';
 
 // Load some schemas & models
 import './models/challenge';
 import './models/group';
 import './models/user';
+// import quest
+import './models/quests/quest';
 
 connectToMongoDB();
 

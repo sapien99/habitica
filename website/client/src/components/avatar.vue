@@ -5,13 +5,13 @@
     :style="{width, height, paddingTop}"
     :class="topLevelClassList"
     @click.prevent="castEnd()"
-  >
+  >  
     <div
       class="character-sprites"
       :style="{margin: spritesMargin}"
     >
       <template v-if="!avatarOnly">
-        <!-- Mount Body-->
+        <!-- Mount Body -->
         <span
           v-if="member.items.currentMount"
           :class="'Mount_Body_' + member.items.currentMount"
@@ -93,13 +93,13 @@
       class="under-avatar"
       :member-class="member.stats.class"
     />
-  </div>
+  </div>  
 </template>
 
 <style lang="scss" scoped>
   @import '@/assets/scss/colors.scss';
 
-  .avatar {
+  .avatar {    
     width: 141px;
     image-rendering: pixelated;
     position: relative;
@@ -110,10 +110,16 @@
     }
 
     // resetting the additional padding
-    margin-bottom: -0.5rem !important;
+    //margin-bottom: -0.5rem !important;
   }
 
-  .character-sprites {
+  .log-avatar {
+    margin: 0px;
+    top: -30px;
+    left: 15px;    
+  }
+
+  .character-sprites {    
     width: 90px;
     height: 90px;
 
@@ -385,6 +391,7 @@ export default {
     showAvatar () {
       if (!this.member) return false;
       if (!this.showVisualBuffs) return true;
+      if (!this.member.stats) this.member.stats = {};
 
       const { buffs } = this.member.stats;
 
