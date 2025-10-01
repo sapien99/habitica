@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // API Key aus Umgebungsvariable 
+  apiKey: process.env.OPENAI_API_KEY, // API Key aus Umgebungsvariable
 });
 
 // Hilfsfunktion für Übersetzung
