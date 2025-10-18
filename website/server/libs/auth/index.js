@@ -232,17 +232,6 @@ async function registerLocal (req, res, { isV3 = false }) {
     })
     .catch(err => logger.error(err));
 
-  if (!existingUser) {
-    res.analytics.track('register', {
-      category: 'acquisition',
-      type: 'local',
-      gaLabel: 'local',
-      uuid: savedUser._id,
-      headers: req.headers,
-      user: savedUser,
-    });
-  }
-
   return null;
 }
 

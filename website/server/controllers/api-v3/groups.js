@@ -23,9 +23,6 @@ import {
   inviteByUserName,
 } from '../../libs/invites';
 import common from '../../../common';
-import payments from '../../libs/payments/payments';
-import stripePayments from '../../libs/payments/stripe';
-import amzLib from '../../libs/payments/amazon';
 import { apiError } from '../../libs/apiError';
 import { model as UserNotification } from '../../models/userNotification';
 import {
@@ -194,43 +191,7 @@ api.createGroupPlan = {
   url: '/groups/create-plan',
   middlewares: [authWithHeaders()],
   async handler (req, res) {
-    const { user } = res.locals;
-    const group = new Group(Group.sanitize(req.body.groupToCreate));
-
-    const validationErrors = req.validationErrors();
-    if (validationErrors) throw validationErrors;
-
-    // @TODO: Change message
-    if (group.privacy !== 'private') throw new NotAuthorized(res.t('partyMustbePrivate'));
-    group.leader = user._id;
-    user.guilds.push(group._id);
-
-    const results = await Promise.all([user.save(), group.save()]);
-
-    await payments.createSubscription({
-      user,
-      customerId: 'habitrpg',
-      paymentMethod: '',
-      sub: {
-        key: 'group_monthly',
-        quantity: 100000,
-      },
-      groupId: group._id,
-    });
-
-    const savedGroup = results[1];
-
-    res.analytics.track('join group', {
-      uuid: user._id,
-      hitType: 'event',
-      category: 'behavior',
-      owner: true,
-      groupId: savedGroup._id,
-      groupType: savedGroup.type,
-      privacy: savedGroup.privacy,
-      headers: req.headers,
-      invited: false,
-    });
+    // RAUS!!    
 
     // do not remove chat flags data as we've just created the group
     const groupResponse = savedGroup.toJSON();
@@ -239,45 +200,7 @@ api.createGroupPlan = {
       _id: user._id,
       profile: { name: user.profile.name },
     };
-
-    if (req.body.paymentType === 'Stripe') {
-      const {
-        gift, sub: subKey, gemsBlock, coupon,
-      } = req.body;
-
-      const sub = subKey ? common.content.subscriptionBlocks[subKey] : false;
-      const groupId = savedGroup._id;
-
-      const session = await stripePayments.createCheckoutSession({
-        user, gemsBlock, gift, sub, groupId, coupon, headers: req.headers,
-      });
-
-      res.respond(200, {
-        sessionId: session.id,
-        group: groupResponse,
-      });
-    } else if (req.body.paymentType === 'Amazon') {
-      const { billingAgreementId } = req.body;
-      const sub = req.body.subscription
-        ? common.content.subscriptionBlocks[req.body.subscription]
-        : false;
-      const { coupon } = req.body;
-      const groupId = savedGroup._id;
-      const { headers } = req;
-
-      await amzLib.subscribe({
-        billingAgreementId,
-        sub,
-        coupon,
-        user,
-        groupId,
-        headers,
-      });
-
-      res.respond(201, groupResponse);
-    } else {
-      res.respond(201, groupResponse);
-    }
+    res.respond(201, groupResponse);    
   },
 };
 

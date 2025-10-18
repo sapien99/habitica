@@ -2,7 +2,7 @@
   <div
     class="tasks-column"
     :class="type"
-  >
+  >    
     <b-modal ref="editTaskModal" />
     <buy-quest-modal
       v-if="type === 'reward'"
@@ -43,7 +43,7 @@
       class="tasks-list"
     >
       <textarea
-        v-if="isUser || canCreateTasks()"
+        v-if="isUser && canCreateTasks()"
         ref="quickAdd"
         v-model="quickAddText"
         class="quick-add"
@@ -375,6 +375,8 @@ import dailyIcon from '@/assets/svg/daily.svg?raw';
 import todoIcon from '@/assets/svg/todo.svg?raw';
 import rewardIcon from '@/assets/svg/reward.svg?raw';
 import { EVENTS } from '@/libs/events';
+import { userStateMixin } from '../../mixins/userState';
+import toggles from '@/store/toggles';
 
 export default {
   components: {
@@ -385,7 +387,7 @@ export default {
     shopItem,
     draggable,
   },
-  mixins: [buyMixin, notifications, sync, externalLinks],
+  mixins: [buyMixin, notifications, sync, externalLinks, userStateMixin],
   // @TODO Set default values for props
   // allows for better control of props values
   // allows for better control of where this component is called
@@ -444,7 +446,7 @@ export default {
       getUnfilteredTaskList: 'tasks:getUnfilteredTaskList',
       getUserPreferences: 'user:preferences',
       getUserBuffs: 'user:buffs',
-    }),
+    }),    
     taskList () {
       // @TODO: This should not default to user's tasks. It should require that you pass options in
       const filteredTaskList = this.isUser
@@ -461,10 +463,10 @@ export default {
     },
     inAppRewards () {
       let watchRefresh = this.forceRefresh; // eslint-disable-line
-      const rewards = inAppRewards(this.user);
+      const rewards = inAppRewards(this.user);      
 
       return rewards;
-    },
+    },    
     hasRewardsList () {
       return this.isUser === true && this.type === 'reward' && this.activeFilter.label !== 'custom';
     },
@@ -626,10 +628,13 @@ export default {
       this.showPopovers = true;
       this.isDragging(false);
     },
-    canCreateTasks () {
-      if (!this.group) return false;
+    canCreateTasks () {      
+      // mf: maybe check user level etc
+      return toggles(this.user).main.customCreate[this.type];
+
+      /*if (!this.group) return false;
       return (this.group.leader && this.group.leader._id === this.user._id)
-        || (this.group.managers && Boolean(this.group.managers[this.user._id]));
+        || (this.group.managers && Boolean(this.group.managers[this.user._id]));*/
     },
     async quickAdd (ev) {
       // Add a new line if Shift+Enter Pressed

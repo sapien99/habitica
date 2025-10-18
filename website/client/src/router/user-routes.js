@@ -9,8 +9,8 @@ const Transactions = () => import('@/pages/settings/purchaseHistory.vue');
 const SiteData = () => import('@/pages/settings/siteData.vue');
 
 // not converted yet
-const PromoCode = () => import('@/pages/settings/promoCode.vue');
-const Subscription = () => import('@/components/settings/subscription');
+//mf: const PromoCode = () => import('@/pages/settings/promoCode.vue');
+//mf: const Subscription = () => import('@/components/settings/subscription');
 
 export const USER_ROUTES = {
   path: '/user',
@@ -32,7 +32,7 @@ export const USER_ROUTES = {
           component: SiteData,
         },
         { path: 'api', redirect: { name: 'siteData' } },
-        {
+        /* mf: {
           name: 'promoCode',
           path: 'promo-code',
           component: PromoCode,
@@ -41,7 +41,7 @@ export const USER_ROUTES = {
           name: 'subscription',
           path: 'subscription',
           component: Subscription,
-        },
+        },*/ 
         {
           name: 'transactions',
           path: 'transactions',

@@ -16,8 +16,8 @@ const Logout = () => import(/* webpackChunkName: "auth" */'@/components/auth/log
 
 // Hall
 const HallPage = () => import(/* webpackChunkName: "hall" */'@/components/hall/index');
-const PatronsPage = () => import(/* webpackChunkName: "hall" */'@/components/hall/patrons');
-const HeroesPage = () => import(/* webpackChunkName: "hall" */'@/components/hall/heroes');
+//mf: const PatronsPage = () => import(/* webpackChunkName: "hall" */'@/components/hall/patrons');
+//mf: const HeroesPage = () => import(/* webpackChunkName: "hall" */'@/components/hall/heroes');
 
 // Admin Pages
 const AdminContainerPage = () => import(/* webpackChunkName: "admin-panel" */'@/components/admin/container');
@@ -170,15 +170,14 @@ const router = new VueRouter({
     },
     USER_ROUTES,
     STATIC_ROUTES,
-    {
+    /*mf: {
       path: '/hall',
       component: HallPage,
       children: [
         { name: 'patrons', path: 'patrons', component: PatronsPage },
         { name: 'contributors', path: 'contributors', component: HeroesPage },
       ],
-    },
-
+    },*/
     {
       name: 'adminSection',
       path: '/admin',

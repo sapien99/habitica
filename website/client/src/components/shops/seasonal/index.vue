@@ -46,11 +46,11 @@
             class="npc"
             :style="{'background-image': imageURLs.npc}"
           >
-            <div class="featured-label">
+            <!--<div class="featured-label">
               <span class="rectangle"></span>
               <span class="text">Leslie</span>
               <span class="rectangle"></span>
-            </div>
+            </div>-->
           </div>
           <div
             v-if="seasonal.featured.items.length !== 0"

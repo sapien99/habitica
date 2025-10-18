@@ -124,32 +124,32 @@
               {{ $t('shops') }}
             </router-link>
             <div class="topbar-dropdown">
-              <router-link
+              <router-link v-if="toggles.shops.enabled.market"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'market'}"
                 exact="exact"
               >
                 {{ $t('market') }}
               </router-link>
-              <router-link
+              <router-link v-if="toggles.shops.enabled.quests"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'quests'}"
               >
                 {{ $t('quests') }}
               </router-link>
-              <router-link
+              <router-link v-if="toggles.shops.enabled.customizations"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'customizations'}"
               >
                 {{ $t('customizations') }}
               </router-link>
-              <router-link
+              <router-link v-if="toggles.shops.enabled.seasonal"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'seasonal'}"
               >
                 {{ $t('titleSeasonalShop') }}
               </router-link>
-              <router-link
+              <router-link v-if="toggles.shops.enabled.time"
                 class="topbar-dropdown-item dropdown-item"
                 :to="{name: 'time'}"
               >
@@ -436,7 +436,7 @@ body.modal-open #habitica-menu {
 <style lang="scss" scoped>
   @import '@/assets/scss/colors.scss';
   @import '@/assets/scss/utils.scss';
-  @import '@/assets/scss/variables.scss';
+  @import '@/assets/scss/variables.scss';  
 
   .menu-toggle {
     border: none;
@@ -792,6 +792,7 @@ import sync from '@/mixins/sync';
 import userDropdown from './userDropdown';
 import reportBug from '@/mixins/reportBug.js';
 import { userStateMixin } from '../../mixins/userState';
+import toggles from '@/store/toggles';
 
 export default {
   components: {
@@ -807,6 +808,7 @@ export default {
   mixins: [sync, reportBug, userStateMixin],
   data () {
     return {
+      toggles: toggles(this.user),
       isUserDropdownOpen: false,
       menuIsOpen: false,
       partyLeaderId: null,

@@ -73,11 +73,11 @@
             class="npc"
             :style="{'background-image': imageURLs.npc}"
           >
-            <div class="featured-label">
+            <!--<div class="featured-label">
               <span class="rectangle"></span>
               <span class="text">Ian</span>
               <span class="rectangle"></span>
-            </div>
+            </div>-->
           </div>
           <div class="content">
             <div class="featured-label with-border">

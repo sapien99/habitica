@@ -40,12 +40,11 @@
     </div>
     <div class="standard-page">
       <div class="featuredItems">
-        <div
-          v-if="isSubscribed || (hasTrinket && !isSubscribed)"
+        <div          
           class="background"
           :style="{'background-image': imageURLs.background}"
         >
-          <div
+          <!--<div
             class="npc"
             :style="{'background-image': imageURLs.npc}"
           >
@@ -59,7 +58,7 @@
               </span>
               <span class="rectangle"></span>
             </div>
-          </div>
+          </div>-->
         </div>
         <div class="content">
           <div
@@ -69,8 +68,8 @@
             <div
               class="npc"
               :style="{'background-image': imageURLs.npc}"
-            >
-              <div class="featured-label">
+            > 
+              <!--<div class="featured-label">
                 <span class="rectangle"></span>
                 <span
                   v-once
@@ -79,21 +78,8 @@
                   {{ $t('timeTravelers') }}
                 </span>
                 <span class="rectangle"></span>
-              </div>
-            </div>
-            <div
-              v-if="!isSubscribed && !hasTrinket"
-              class="shop-message featured-label with-border closed"
-            >
-              <span class="rectangle"></span>
-              <span
-                v-once
-                class="text"
-              >
-                {{ $t('timeTravelersPopoverNoSubMobile') }}
-              </span>
-              <span class="rectangle"></span>
-            </div>
+              </div>-->
+            </div>            
           </div>
         </div>
       </div>

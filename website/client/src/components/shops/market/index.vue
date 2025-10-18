@@ -19,7 +19,7 @@
       <featured-items-header
         :bg-url="imageURLs.background"
         :npc-url="imageURLs.npc"
-        :npc-name="'Alex'"
+        :npc-name="'Dorian'"
         :featured-text="market.featured.text"
         :featured-items="market.featured.items"
         @featuredItemSelected="featuredItemSelected($event)"
@@ -246,7 +246,7 @@ export default {
         ...this.market.categories,
       ];
 
-      categories.push({
+      /*mf: raus categories.push({
         identifier: 'cards',
         text: this.$t('cards'),
         items: _map(_filter(this.content.cardTypes, value => value.yearRound
@@ -254,7 +254,7 @@ export default {
           ...getItemInfo(this.user, 'card', value),
           showCount: false,
         })),
-      });
+      });*/
 
       const specialItems = [{
         ...getItemInfo(this.user, 'fortify'),

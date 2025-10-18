@@ -124,15 +124,8 @@ api.loginLocal = {
     }
     // Force the updated timestamp to update, so that we know they logged in
     user.auth.timestamps.updated = new Date();
+    user.auth.timestamps.loggedin = new Date();
     await user.save();
-
-    res.analytics.track('login', {
-      category: 'behaviour',
-      type: 'local',
-      gaLabel: 'local',
-      uuid: user._id,
-      headers: req.headers,
-    });
 
     return loginRes(user, req, res);
   },

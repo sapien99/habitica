@@ -14,7 +14,6 @@ import {
   validateItemPath,
   castItemVal,
 } from '../../libs/items/utils';
-import { addSubToGroupUser } from '../../libs/payments/groupPayments';
 import { leaveGroup } from '../../libs/groups';
 
 const api = {};
@@ -322,10 +321,7 @@ api.updateHero = {
       }
       if (plan.customerId) {
         hero.purchased.plan.customerId = plan.customerId;
-      }
-      if (plan.paymentMethod) {
-        hero.purchased.plan.paymentMethod = plan.paymentMethod;
-      }
+      }      
       if (plan.planId) {
         hero.purchased.plan.planId = plan.planId;
       }
@@ -334,21 +330,7 @@ api.updateHero = {
       }
       if (plan.hourglassPromoReceived) {
         hero.purchased.plan.hourglassPromoReceived = plan.hourglassPromoReceived;
-      }
-
-      if (plan.convertToGroupPlan) {
-        const groupID = plan.convertToGroupPlan;
-        const group = await Group.getGroup({ user: hero, groupId: groupID });
-        if (!group) throw new NotFound(res.t('groupNotFound'));
-        if (group.hasNotCancelled()) {
-          hero.purchased.plan.customerId = null;
-          hero.purchased.plan.paymentMethod = null;
-          await addSubToGroupUser(hero, group);
-          await group.updateGroupPlan();
-        } else {
-          throw new BadRequest('Group does not have a plan');
-        }
-      }
+      }      
     }
 
     if (updateData.stats) {

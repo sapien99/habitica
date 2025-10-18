@@ -15,7 +15,6 @@ import {
 } from './message';
 import * as Tasks from './task';
 import { removeFromArray } from '../libs/collectionManipulators';
-import payments from '../libs/payments/payments'; // eslint-disable-line import/no-cycle
 import { // eslint-disable-line import/no-cycle
   groupChatReceivedWebhook,
   questActivityWebhook,
@@ -32,8 +31,6 @@ import {
   schema as SubscriptionPlanSchema,
 } from './subscriptionPlan';
 import logger from '../libs/logger';
-import amazonPayments from '../libs/payments/amazon'; // eslint-disable-line import/no-cycle
-import stripePayments from '../libs/payments/stripe'; // eslint-disable-line import/no-cycle
 import { getGroupChat, translateMessage } from '../libs/chat/group-chat'; // eslint-disable-line import/no-cycle
 import { model as UserNotification } from './userNotification';
 import { sendChatPushNotifications } from '../libs/chat'; // eslint-disable-line import/no-cycle
@@ -1408,10 +1405,6 @@ schema.methods.leave = async function leaveGroup (user, keep = 'keep-all', keepC
   }
   */
 
-  if (group.purchased.plan.customerId) {
-    await payments.cancelGroupSubscriptionForUser(user, this);
-  }
-
   // only remove user from challenges if it's set to leave-challenges
   if (keepChallenges === 'leave-challenges') {
     const challenges = await Challenge.find({
@@ -1694,17 +1687,7 @@ schema.methods.hasCancelled = function hasCancelled () {
 };
 
 schema.methods.updateGroupPlan = async function updateGroupPlan (removingMember) {
-  // Recheck the group plan count
-  this.memberCount = await this.getMemberCount();
-
-  if (this.purchased.plan.paymentMethod === stripePayments.constants.PAYMENT_METHOD) {
-    await stripePayments.chargeForAdditionalGroupMember(this);
-  } else if (
-    this.purchased.plan.paymentMethod === amazonPayments.constants.PAYMENT_METHOD
-    && !removingMember
-  ) {
-    await amazonPayments.chargeForAdditionalGroupMember(this);
-  }
+  // RAUS!  
 };
 
 export const model = mongoose.model('Group', schema);

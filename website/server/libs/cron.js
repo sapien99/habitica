@@ -6,7 +6,6 @@ import * as Tasks from '../models/task';
 import { model as Group } from '../models/group';
 import common from '../../common';
 import { preenUserHistory } from './preening';
-import { revealMysteryItems } from './payments/subscriptions';
 import { model as UserHistory } from '../models/userHistory';
 
 const CRON_SAFE_MODE = nconf.get('CRON_SAFE_MODE') === 'true';
@@ -56,6 +55,7 @@ async function grantEndOfTheMonthPerks (user, now) {
 }
 
 function removeTerminatedSubscription (user) {
+  // RAUS!!
   const { plan } = user.purchased;
   plan.planId = null;
   plan.customerId = null;
@@ -97,35 +97,6 @@ function processHabits (user, habits, now, daysMissed) {
       task.value = Math.abs(task.value) < 0.1 ? 0 : task.value /= 2;
     }
   });
-}
-
-function trackCronAnalytics (analytics, user, _progress, options) {
-  analytics.track('Cron', {
-    category: 'behavior',
-    gaLabel: 'Cron Count',
-    gaValue: user.flags.cronCount,
-    uuid: user._id,
-    user,
-    resting: user.preferences.sleep,
-    cronCount: user.flags.cronCount,
-    progressUp: Math.min(_progress.up, 900),
-    progressDown: _progress.down,
-    headers: options.headers,
-    loginIncentives: user.loginIncentives,
-  });
-
-  if (
-    user.party && user.party.quest && !user.party.quest.RSVPNeeded
-    && !user.party.quest.completed && user.party.quest.key && !user.preferences.sleep
-  ) {
-    analytics.track('quest participation', {
-      category: 'behavior',
-      uuid: user._id,
-      user,
-      questName: user.party.quest.key,
-      headers: options.headers,
-    }, true);
-  }
 }
 
 function awardLoginIncentives (user) {
@@ -407,8 +378,8 @@ export async function cron (options = {}) {
   }
 
   // Analytics
-  user.flags.cronCount += 1;
-  trackCronAnalytics(analytics, user, _progress, options);
+  //user.flags.cronCount += 1;
+  //trackCronAnalytics(analytics, user, _progress, options);
 
   await UserHistory.beginUserHistoryUpdate(user._id, options.headers)
     .withCron(user.flags.cronCount)
@@ -457,7 +428,8 @@ export async function cronWrapper (req, res) {
   let session;
 
   try {
-    await checkForActiveCron(user, now);
+    // mf: raus und generell diese variante nimmer beim login aufrufen. ! we run cron just at regular base, not in login
+    /*await checkForActiveCron(user, now);
     const { daysMissed, timezoneUtcOffsetFromUserPrefs } = user.daysUserHasMissed(now, req);
 
     if (daysMissed <= 0) {
@@ -507,10 +479,10 @@ export async function cronWrapper (req, res) {
       headers: req.headers,
     });
 
-    // await Group.tavernBoss(user, progress);
+    // await Group.tavernBoss(user, progress);*/
 
     // Save user and tasks
-    user._cronSignature = 'NOT_RUNNING';
+    /*user._cronSignature = 'NOT_RUNNING';
     user.markModified('_cronSignature');
     user.auth.timestamps.loggedin = now;
     user.lastCron = now;
@@ -530,7 +502,7 @@ export async function cronWrapper (req, res) {
     await Group.processQuestProgress(user, progress);
 
     // Reload user
-    res.locals.user = await User.findOne({ _id: user._id }).exec();
+    res.locals.user = await User.findOne({ _id: user._id }).exec();*/
     return null;
   } catch (err) {
     if (err.message !== 'CRON_ALREADY_RUNNING') {

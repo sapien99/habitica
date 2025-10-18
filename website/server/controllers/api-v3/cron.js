@@ -18,6 +18,7 @@ api.cron = {
   url: '/cron',
   middlewares: [authWithHeaders()],
   async handler (req, res) {
+    // mf: dont run cron, just save and handle last login etc
     await cronWrapper(req, res);
     res.respond(200, {});
   },

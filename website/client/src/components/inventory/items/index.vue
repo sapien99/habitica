@@ -56,8 +56,9 @@
         v-if="!anyFilterSelected || group.selected"
         :key="group.key"
       >
-        <!-- eslint-enable vue/no-use-v-if-with-v-for -->
-        <h2 class="d-flex align-items-center mb-3 sub-header">
+        <!-- eslint-enable vue/no-use-v-if-with-v-for -->         
+         <!-- mf: only show selected groups, filter "special" -->
+        <h2 v-if="group.key != 'special'" class="d-flex align-items-center mb-3 sub-header">
           {{ $t(group.key) }}
           <span
             v-if="group.key != 'special'"
@@ -165,6 +166,69 @@
             </item>
           </template>
         </itemRows>
+        <!-- do nothing if "special" -->
+        <itemRows
+          v-else-if="group.key === 'special'"
+          :items="items[group.key]"
+          :item-width="94"
+          :item-margin="24"
+          :type="group.key"
+          :no-items-label="$t('noGearItemsOfType', { type: $t(group.key) })"
+        >
+          <template
+            slot="item"            
+          >            
+          </template>
+        </itemRows>
+        <!-- quests -->
+         <itemRows
+          v-else-if="group.key === 'quests'"
+          :items="items[group.key]"
+          :item-width="94"
+          :item-margin="24"
+          :type="group.key"
+          :no-items-label="$t('noGearItemsOfType', { type: $t(group.key) })"
+        >
+          <template
+            slot="item"
+            slot-scope="context"
+          >
+            <pre>{{ context.item.class }}</pre>
+            <item
+              :key="context.item.key"
+              :item="context.item"
+              :item-content-class="context.item.class"
+              :show-popover="currentDraggingPotion == null"
+              @click="itemClicked(group.key, context.item)"
+            >              
+              <template
+                slot="popoverContent"
+                slot-scope="context"
+              >
+                <div                  
+                  class="questPopover"
+                >
+                  <h4 class="popover-content-title">
+                    Quest: {{ context.item.text }}
+                  </h4>
+                  <questInfo
+                    :quest="context.item"
+                    :purchased="true"
+                  />
+                </div>                
+              </template>
+              <template
+                slot="itemBadge"
+                slot-scope="context"
+              >
+                <countBadge
+                  :show="true"
+                  :count="context.item.quantity"
+                />
+              </template>
+            </item>
+          </template>
+        </itemRows>
         <itemRows
           v-else
           :items="items[group.key]"
@@ -183,7 +247,7 @@
               :item-content-class="context.item.class"
               :show-popover="currentDraggingPotion == null"
               @click="itemClicked(group.key, context.item)"
-            >
+            >              
               <template
                 slot="popoverContent"
                 slot-scope="context"

@@ -191,7 +191,8 @@
             class="dropdown"
           >
             <div
-              v-for="type in columns"
+              v-for="type in createableColumns"
+              ferl              
               :key="type"
               class="dropdown-item d-flex px-2 py-1"
               @click="createTask(type)"
@@ -407,6 +408,7 @@ import dragIcon from '@/assets/svg/drag_indicator.svg?raw';
 import { mapState, mapActions } from '@/libs/store';
 import brokenTaskModal from './brokenTaskModal';
 import { userStateMixin } from '../../mixins/userState';
+import toggles from '../../store/toggles';
 
 export default {
   components: {
@@ -420,9 +422,11 @@ export default {
   directives: {
     markdown,
   },
+  mixins: [userStateMixin],
   data () {
     return {
-      columns: ['habit', 'daily', 'todo', 'reward'],
+      toggles: toggles(this.user),
+      columns: ['habit', 'daily', 'todo', 'reward'],      
       searchText: null,
       searchTextThrottled: null,
       isFilterPanelOpen: false,
@@ -452,6 +456,11 @@ export default {
   mixins: [userStateMixin],
   computed: {
     ...mapState({ user: 'user.data' }),
+    createableColumns () {
+      return this.columns.filter((type) => {
+        return toggles.main.customCreate[type];
+      });
+    },
     tagsByType () {
       const userTags = this.user.tags; //mf: TODO: reduce default!!
       const tagsByType = {
